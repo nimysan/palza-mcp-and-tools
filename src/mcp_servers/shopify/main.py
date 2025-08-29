@@ -13,7 +13,7 @@ def main():
         sys.path.insert(0, src_dir)
         
         # 导入原始的 joke 函数
-        from products_repository import joke
+        from repository import joke
         joke()
     except ImportError as e:
         print(f"Error importing shopify modules: {e}", file=sys.stderr)
