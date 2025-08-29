@@ -40,7 +40,21 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --tb=short --cov=src --cov-report=html --cov-report=term-missing --html=reports/report.html --self-contained-html --json-report --json-report-file=reports/report.json"
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--cov=src",
+    "--cov-report=html",
+    "--cov-report=term-missing",
+    "--html=reports/report.html",
+    "--self-contained-html"
+]
+markers = [
+    "asyncio: marks tests as async",
+    "slow: marks tests as slow"
+]
+asyncio_mode = "auto"
 
 [tool.coverage.run]
 source = ["src"]
