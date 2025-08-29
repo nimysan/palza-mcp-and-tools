@@ -8,7 +8,7 @@ from .crawler import ProductCrawler
 
 class ShoppingService:
     def __init__(self):
-        self.csv_path = Path(__file__).parent.parent / "shopify" / "data" / "products.csv"
+        self.csv_path = Path(__file__).parent.parent.parent / "shopify" / "data" / "products.csv"
         self._df = None
         self.crawler = ProductCrawler()
     
@@ -16,35 +16,73 @@ class ShoppingService:
         """加载产品数据"""
         if self._df is None:
             try:
-                self._df = pd.read_csv(self.csv_path)
+                print(f"尝试加载CSV文件: {self.csv_path}")
+                if not self.csv_path.exists():
+                    print(f"CSV文件不存在: {self.csv_path}")
+                    self._df = pd.DataFrame()
+                else:
+                    self._df = pd.read_csv(self.csv_path)
+                    print(f"成功加载 {len(self._df)} 条产品数据")
             except Exception as e:
-                print(f"Error loading products: {e}")
+                print(f"加载产品数据时发生错误: {e}")
+                print(f"CSV路径: {self.csv_path}")
                 self._df = pd.DataFrame()
         return self._df
     
     def search_products(
         self,
-        query: str,
+        scenario: str,
+        query: Optional[str] = None,
         price_min: Optional[float] = None,
         price_max: Optional[float] = None,
         sort_by: str = "relevance",
         limit: int = 20
     ) -> Dict[str, Any]:
-        """搜索商品"""
+        """基于场景搜索商品"""
         df = self._load_products()
         if df.empty:
             return {"error": "产品数据加载失败"}
         
-        # 搜索过滤
-        mask = df['Name'].str.contains(query, case=False, na=False) | \
-               df['Product Description'].str.contains(query, case=False, na=False)
+        # 场景映射到商品类别或关键词（基于Jackery电源产品）
+        scenario_keywords = {
+            "户外": ["outdoor", "camping", "adventure", "portable", "travel", "rv", "trip", "hiking"],
+            "家用": ["home", "house", "residential", "homepower", "backup", "emergency", "outage"],
+            "应急": ["emergency", "backup", "outage", "blackout", "hurricane", "storm", "disaster"],
+            "旅行": ["travel", "portable", "rv", "trip", "mobile", "camping", "adventure"],
+            "大容量": ["5000", "3000", "plus", "pro", "10kwh", "high capacity", "extended"],
+            "便携": ["portable", "mini", "compact", "lightweight", "small", "2000", "1000"],
+            "太阳能": ["solar", "generator", "renewable", "green", "sustainable"],
+            "配件": ["warranty", "transfer", "switch", "add-on", "accessory", "cable"]
+        }
         
+        # 基于场景过滤
+        scenario_filter = pd.Series([False] * len(df))
+        if scenario in scenario_keywords:
+            keywords = scenario_keywords[scenario]
+            for keyword in keywords:
+                scenario_filter |= df['Name'].str.contains(keyword, case=False, na=False) | \
+                                 df['Product Description'].str.contains(keyword, case=False, na=False)
+        
+        # 如果没有匹配的场景，返回错误
+        if not scenario_filter.any():
+            return {"error": f"未找到场景 '{scenario}' 相关的商品"}
+        
+        # 应用场景过滤
+        df = df[scenario_filter]
+        
+        # 如果有额外的查询关键词，进一步过滤
+        if query:
+            query_filter = df['Name'].str.contains(query, case=False, na=False) | \
+                          df['Product Description'].str.contains(query, case=False, na=False)
+            df = df[query_filter]
+        
+        # 价格过滤
         if price_min is not None:
-            mask &= df['Price'] >= price_min
+            df = df[df['Price'] >= price_min]
         if price_max is not None:
-            mask &= df['Price'] <= price_max
+            df = df[df['Price'] <= price_max]
         
-        results = df[mask].copy()
+        results = df.copy()
         
         # 排序
         if sort_by == "price_asc":
