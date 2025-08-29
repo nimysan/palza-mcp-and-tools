@@ -19,8 +19,8 @@ def main():
         src_dir = os.path.join(current_dir, 'src')
         sys.path.insert(0, src_dir)
         
-        # 导入原始的 joke 函数
-        from .shopping_products import mcp as my_mcp
+        # 导入MCP服务器
+        from .mcp_server import mcp as my_mcp
         logger.info("shopping hello")
         my_mcp.run(transport='stdio')
     except ImportError as e:

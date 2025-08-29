@@ -4,7 +4,7 @@ import pandas as pd
 import json
 import logging
 from pathlib import Path
-from .service import ShoppingService
+from .handlers.product_handler import ShoppingService
 
 # 配置日志
 logging.basicConfig(
