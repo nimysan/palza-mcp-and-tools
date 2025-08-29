@@ -12,9 +12,15 @@ dependencies = [
     "bs4>=0.0.2",
     "mcp>=1.9.3",
     "pandas>=2.3.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+test = [
     "pytest>=8.4.0",
     "pytest-asyncio>=1.0.0",
-    "requests>=2.31.0",
+    "pytest-cov>=4.0.0",
+    "tox>=4.0.0",
 ]
 authors = [
     {name = "Xiaowei Ye", email = "yexw@amazon.com"}
