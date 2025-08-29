@@ -6,6 +6,12 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![GitHub stars](https://img.shields.io/github/stars/nimysan/palza-mcp-and-tools?style=social)
+![GitHub forks](https://img.shields.io/github/forks/nimysan/palza-mcp-and-tools?style=social)
+![GitHub issues](https://img.shields.io/github/issues/nimysan/palza-mcp-and-tools)
+![Last commit](https://img.shields.io/github/last-commit/nimysan/palza-mcp-and-tools)
+![Repo size](https://img.shields.io/github/repo-size/nimysan/palza-mcp-and-tools)
+[![Made with Python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
 一个包含多个 MCP (Model Context Protocol) 服务器的项目。
 
