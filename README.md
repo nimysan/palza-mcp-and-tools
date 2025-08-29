@@ -1,5 +1,9 @@
 # MCP Servers Collection
 
+[![Pylint](https://github.com/nimysan/palza-mcp-and-tools/actions/workflows/pylint.yml/badge.svg)](https://github.com/nimysan/palza-mcp-and-tools/actions/workflows/pylint.yml)
+[![Tests](https://github.com/nimysan/palza-mcp-and-tools/actions/workflows/test.yml/badge.svg)](https://github.com/nimysan/palza-mcp-and-tools/actions/workflows/test.yml)
+[![Tox](https://github.com/nimysan/palza-mcp-and-tools/actions/workflows/tox.yml/badge.svg)](https://github.com/nimysan/palza-mcp-and-tools/actions/workflows/tox.yml)
+
 一个包含多个 MCP (Model Context Protocol) 服务器的项目。
 
 ## 可用的 MCP 服务器
