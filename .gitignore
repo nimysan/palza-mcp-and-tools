@@ -30,3 +30,6 @@ htmlcov/
 .coverage.*
 .pytest_cache/
 reports/
+
+# Tox
+.tox/
