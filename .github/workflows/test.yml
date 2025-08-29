@@ -21,9 +21,4 @@ jobs:
         pip install -e .
     - name: Run tests with coverage
       run: |
-        pytest --cov=src/mcp_servers --cov-report=xml --cov-report=term
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: true
+        pytest --cov=src/mcp_servers --cov-report=term
