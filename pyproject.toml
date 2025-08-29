@@ -8,6 +8,9 @@ version = "0.1.0"
 description = "Collection of MCP servers"
 readme = "README.md"
 requires-python = ">=3.10"
+authors = [
+    {name = "Xiaowei Ye", email = "yexw@amazon.com"}
+]
 dependencies = [
     "bs4>=0.0.2",
     "mcp>=1.9.3",
@@ -22,12 +25,8 @@ test = [
     "pytest-cov>=4.0.0",
     "tox>=4.0.0",
 ]
-authors = [
-    {name = "Xiaowei Ye", email = "yexw@amazon.com"}
-]
 
 [project.scripts]
 mcp-shopify-products = "mcp_servers.shopify.main:main"
 mcp-weather = "mcp_servers.weather.main:main"
-
 
