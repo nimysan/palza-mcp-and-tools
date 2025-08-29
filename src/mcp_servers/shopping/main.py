@@ -34,13 +34,14 @@ async def search_products(
     return json.dumps(result, indent=2)
 
 @mcp.tool()
-async def get_product_detail(product_id: str) -> str:
+async def get_product_detail(product_id: str, fetch_live_data: bool = True) -> str:
     """获取单个商品的详细信息
     
     Args:
         product_id: 商品ID
+        fetch_live_data: 是否获取实时网页数据（默认True）
     """
-    result = shopping_service.get_product_detail(product_id)
+    result = shopping_service.get_product_detail(product_id, fetch_live_data)
     return json.dumps(result, indent=2)
 
 @mcp.tool()

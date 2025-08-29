@@ -4,11 +4,13 @@ import pandas as pd
 import json
 from typing import Optional, Dict, Any
 from pathlib import Path
+from .crawler import ProductCrawler
 
 class ShoppingService:
     def __init__(self):
         self.csv_path = Path(__file__).parent.parent / "shopify" / "data" / "products.csv"
         self._df = None
+        self.crawler = ProductCrawler()
     
     def _load_products(self) -> pd.DataFrame:
         """加载产品数据"""
@@ -80,7 +82,7 @@ class ShoppingService:
             }
         }
     
-    def get_product_detail(self, product_id: str) -> Dict[str, Any]:
+    def get_product_detail(self, product_id: str, fetch_live_data: bool = True) -> Dict[str, Any]:
         """获取商品详情"""
         df = self._load_products()
         if df.empty:
@@ -104,7 +106,9 @@ class ShoppingService:
             })
         
         first_row = product.iloc[0]
-        return {
+        
+        # 基础产品信息
+        result = {
             "product_id": product_id,
             "name": first_row['Name'],
             "description": first_row['Product Description'],
@@ -118,6 +122,23 @@ class ShoppingService:
             "variants": variants,
             "total_variants": len(variants)
         }
+        
+        # 获取实时网页数据
+        if fetch_live_data and pd.notna(first_row['URL']) and first_row['URL'].strip():
+            live_data = self.crawler.get_product_detail(first_row['URL'])
+            if 'error' not in live_data:
+                result['live_data'] = live_data
+                # 合并实时数据
+                if live_data.get('images'):
+                    result['images'] = live_data['images']
+                if live_data.get('features'):
+                    result['features'] = live_data['features']
+                if live_data.get('rating'):
+                    result['rating'] = live_data['rating']
+                if live_data.get('brand'):
+                    result['brand'] = live_data['brand']
+        
+        return result
     
     def check_inventory(
         self,

@@ -72,12 +72,33 @@ class TestShoppingService:
     def test_get_product_detail_success(self, service, mock_df):
         """Test successful product detail retrieval"""
         with patch.object(service, '_load_products', return_value=mock_df):
-            result = service.get_product_detail("1001")
+            with patch.object(service.crawler, 'get_product_detail') as mock_crawler:
+                mock_crawler.return_value = {
+                    "images": ["img1.jpg", "img2.jpg"],
+                    "features": ["Feature 1", "Feature 2"],
+                    "rating": {"rating": "4.5", "review_count": "100"},
+                    "brand": "Jackery"
+                }
+                
+                result = service.get_product_detail("1001")
+                
+                assert result['product_id'] == "1001"
+                assert result['name'] == 'Jackery Explorer 1000'
+                assert len(result['variants']) == 2
+                assert result['variants'][0]['variant_id'] == '2001'
+                assert 'live_data' in result
+                assert result['images'] == ["img1.jpg", "img2.jpg"]
+                assert result['brand'] == "Jackery"
+    
+    def test_get_product_detail_without_live_data(self, service, mock_df):
+        """Test product detail without fetching live data"""
+        with patch.object(service, '_load_products', return_value=mock_df):
+            result = service.get_product_detail("1001", fetch_live_data=False)
             
             assert result['product_id'] == "1001"
             assert result['name'] == 'Jackery Explorer 1000'
-            assert len(result['variants']) == 2
-            assert result['variants'][0]['variant_id'] == '2001'
+            assert 'live_data' not in result
+            assert 'images' not in result
     
     def test_get_product_detail_not_found(self, service, mock_df):
         """Test product detail for non-existent product"""
